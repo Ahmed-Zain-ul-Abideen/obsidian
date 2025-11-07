@@ -90,21 +90,12 @@ CHANNEL_LAYERS = {
         },
     },
 } 
- 
+import dj_database_url
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':  config('DB_Name'),
-        'USER':  config('DB_User'),
-        'PASSWORD':  config('DB_Password'),
-        'HOST':  config('DB_HOST'),
-        'PORT':  config('DB_PORT'),  
-        'OPTIONS': {  
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset': 'utf8',
-        }
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
+    )
 }
 
 
