@@ -44,10 +44,10 @@ class   Mills_Units(models.Model):
     lat  = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     lon  = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     ntn = models.CharField(
-        max_length=20,
+        max_length=255,
         null=True,
         blank=True,
-        validators=[RegexValidator(r'^[A-Za-z0-9\-]+$', 'NTN must be alphanumeric (letters, numbers, or dashes).')]
+        
     )
     gst =  models.PositiveIntegerField(null=True)
     spindles_installed =  models.PositiveIntegerField(null=True) 
