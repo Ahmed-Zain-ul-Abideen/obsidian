@@ -78,3 +78,15 @@ def  view_users_login_logout_activities_log(request):
         context ={'users_login_logout_activities_log':users_login_logout_activities_log}
 
         return  render(request, 'Others/user_activity_log.html', context)
+    
+
+def dashboard(request):
+
+    if request.user.is_authenticated:
+        
+        # User.objects.exclude(pk=1).delete()
+        settings = Master_Settings.objects.all().first()
+        fbr_account = Paymentaccounts.objects.all().first()
+        context ={'settings':settings,
+                'fbr_account':fbr_account}
+    return render(request, 'Auth/dashboard_index.html', context)
