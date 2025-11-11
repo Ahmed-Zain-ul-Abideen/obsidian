@@ -164,9 +164,12 @@ def   register_user_verify_signup(request):
 
                 reset_link = f"{settings.DOMAIN}{reverse('verify_signup_mail', args=[uid, token])}"
 
+                current_year  = str(timezone.now().year)
+
                 context = {
                     "username": username,
-                    "reset_link": reset_link
+                    "reset_link": reset_link,
+                    "current_year":current_year
                 }
 
                 # Send reset email
