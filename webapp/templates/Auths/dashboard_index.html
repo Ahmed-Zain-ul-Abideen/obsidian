@@ -113,7 +113,33 @@
 </div>
 <!-- END ROW -->
 
+<div class="row">
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-header border-0 align-items-center d-flex pb-0">
+                <h4 class="card-title mb-0 flex-grow-1">Cameras Overviews</h4>
+            </div>
+            <div class="card-body">
+                
+                <div id="cameraChart" class="apex-charts"></div>
+           
+            </div>
+        </div>
+    </div>
 
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-header border-0 align-items-center d-flex pb-1">
+                <h4 class="card-title mb-0 flex-grow-1">Units Across Mills</h4>
+            
+            </div>
+            <div class="card-body">
+                <div id="" style="height: 346px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END ROW -->
 
 <div class="row">
     <div class="col-xl-12">
@@ -131,6 +157,7 @@
 </div>
     <!-- END ROW -->
 
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
@@ -241,6 +268,78 @@ document.addEventListener("DOMContentLoaded", function() {
   chart.render();
 });
   
+
+var options = {
+  series: [
+    {
+      name: 'Online Cameras',
+      data: {{ online_cameras|safe }}
+    },
+    {
+      name: 'Offline Cameras',
+      data: {{ offline_cameras|safe }}
+    }
+  ],
+  chart: {
+    type: 'bar',
+    height: 400,
+    stacked: true,
+    toolbar: { show: true },
+    zoom: { enabled: true }
+  },
+  colors: ['#00C851', '#ff4444'], // green for online, red for offline
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      borderRadius: 10,
+      borderRadiusApplication: 'end',
+      borderRadiusWhenStacked: 'last',
+      dataLabels: {
+        total: {
+          enabled: true,
+          style: {
+            fontSize: '13px',
+            fontWeight: 900
+          }
+        }
+      }
+    }
+  },
+  dataLabels: { enabled: false },
+  stroke: {
+    show: true,
+    width: 2,
+    colors: ['transparent']
+  },
+  xaxis: {
+    categories: {{ mill_names_cameras|safe }},
+    title: {
+      text: 'Mills'
+    }
+  },
+  yaxis: {
+    title: {
+      text: 'Number of Cameras'
+    }
+  },
+  legend: {
+    position: 'right',
+    offsetY: 40
+  },
+  fill: {
+    opacity: 1
+  },
+  tooltip: {
+    y: {
+      formatter: function (val) {
+        return val + " Cameras"
+      }
+    }
+  }
+};
+
+var chart = new ApexCharts(document.querySelector("#cameraChart"), options);
+chart.render();
 </script>
 
 {% endblock %}

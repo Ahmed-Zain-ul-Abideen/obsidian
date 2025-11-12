@@ -181,6 +181,7 @@ def  view_users_login_logout_activities_log(request):
     
 from django.db.models import Sum
 import json
+from django.db.models import OuterRef, Subquery, Sum
 def dashboard(request):
     # Fetch basic settings and account info
     settings = Master_Settings.objects.first()
@@ -221,6 +222,37 @@ def dashboard(request):
     unit_names = [item['mill_unit_invoices__id'] for item in remittance_data]
     total_remittances = [float(item['total_remittance'] or 0) for item in remittance_data]
 
+
+    # --- Camera Analytics per Mill ---
+    mills = Mills.objects.all()
+    mill_names_cameras = []
+    online_cameras = []
+    offline_cameras = []
+    total_cameras = []
+
+
+    for mill in mills:
+        units = Mills_Units.objects.filter(mill=mill)
+        online_sum = offline_sum = total_sum = 0
+
+        for unit in units:
+            latest_report = (
+                Inspection_Reports.objects
+                .filter(mill_unit=unit)
+                .order_by('-created_at')
+                .first()   # handled in Python, no subquery limit problem
+            )
+            if latest_report:
+                online_sum += latest_report.cameras_online or 0
+                offline_sum += latest_report.cameras_offline or 0
+                total_sum += latest_report.num_camera_installed or 0
+
+        mill_names_cameras.append(mill.name)
+        online_cameras.append(online_sum)
+        offline_cameras.append(offline_sum)
+        total_cameras.append(total_sum)
+
+
     context = {
         'settings': settings,
         'fbr_account': fbr_account,
@@ -232,6 +264,12 @@ def dashboard(request):
         'unit_counts': unit_counts,    # for chart Y-values
         'unit_names': json.dumps(unit_names),
         'total_remittances': json.dumps(total_remittances),
+
+        'mill_names_cameras': json.dumps(mill_names),
+        'online_cameras': json.dumps(online_cameras),
+        'offline_cameras': json.dumps(offline_cameras),
+        'total_cameras': json.dumps(total_cameras),
+
 
     }
 
