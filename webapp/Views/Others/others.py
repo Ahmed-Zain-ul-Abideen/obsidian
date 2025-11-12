@@ -21,6 +21,27 @@ def add_inspector(request):
         if User.objects.filter(username=username).exists():
             messages.warning(request, "Username already exists")
             return   redirect(request.META.get('HTTP_REFERER'))
+        
+
+        # if   User.objects.filter(Q(username=username) | Q(email=email)).exists():
+            #     messages.warning(request,  "This  username  or  email  is  already  taken !")
+            #     return redirect(request.META.get('HTTP_REFERER'))
+
+        
+        # existing_user = User.objects.filter(Q(username=username) | Q(email=email))
+
+            # if existing_user.exists():
+            #     username_exists = existing_user.filter(username=username).exists()
+            #     email_exists = existing_user.filter(email=email).exists()
+
+            #     if username_exists and email_exists:
+            #         messages.warning(request, "This username and email are already taken!")
+            #     elif username_exists:
+            #         messages.warning(request, "This username is already taken!")
+            #     elif email_exists:
+            #         messages.warning(request, "This email is already used!")
+
+            #     return redirect(request.META.get('HTTP_REFERER'))
 
         # Create user
         user = User.objects.create_user(
@@ -157,7 +178,10 @@ def add_inspection_report(request, mill_id, unit_id):
             #Installation  report  email
             try:
 
-                unit_address = unit.address 
+                unit_address = unit.address
+
+                unit.cameras_installation_completed  =  True
+                unit.save() 
 
                 current_year  = str(timezone.now().year)
 
@@ -208,15 +232,22 @@ def add_inspection_report(request, mill_id, unit_id):
                 print("Failure  inspection   update  email  ",e)
 
         else:
+            unit.cameras_installation_completed  =  False
+            unit.save()
             print("all  cameras  not  online  , not  sending  email now")
 
         messages.success(request, "Inspection report submitted successfully!")
  
         return redirect("view_inspection_reports")  # Change this URL if needed
     
+    previous_report   =   False
+    if     Inspection_Reports.objects.filter(mill_unit_id=unit_id).exists():
+        previous_report =  Inspection_Reports.objects.filter(mill_unit_id=unit_id).last()
+
     context = { 
         "mill":mill,
-        "unit":unit
+        "unit":unit,
+        "previous_report":previous_report
     }
     return render(request, "Others/add_inspection_report.html", context )
 

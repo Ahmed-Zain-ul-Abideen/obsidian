@@ -4,6 +4,7 @@ from   webapp.models  import   MillOwnersProfile
 from   django.shortcuts   import   redirect,render
 import  random
 import   string
+from   django.db.models   import   Q
 from django.urls import reverse
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode , urlsafe_base64_decode
@@ -143,6 +144,26 @@ def   register_user_verify_signup(request):
             if   User.objects.filter(username=username).exists():
                 messages.warning(request,  "This  username  is  already  taken !")
                 return redirect(request.META.get('HTTP_REFERER'))
+            
+
+            # if   User.objects.filter(Q(username=username) | Q(email=email)).exists():
+            #     messages.warning(request,  "This  username  or  email  is  already  taken !")
+            #     return redirect(request.META.get('HTTP_REFERER'))
+
+            # existing_user = User.objects.filter(Q(username=username) | Q(email=email))
+
+            # if existing_user.exists():
+            #     username_exists = existing_user.filter(username=username).exists()
+            #     email_exists = existing_user.filter(email=email).exists()
+
+            #     if username_exists and email_exists:
+            #         messages.warning(request, "This username and email are already taken!")
+            #     elif username_exists:
+            #         messages.warning(request, "This username is already taken!")
+            #     elif email_exists:
+            #         messages.warning(request, "This email is already used!")
+
+            #     return redirect(request.META.get('HTTP_REFERER'))
 
             
 

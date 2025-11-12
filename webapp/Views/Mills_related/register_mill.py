@@ -6,9 +6,18 @@ from   webapp.models   import  *
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from   django .utils   import   timezone
+import  random
+import   string
 from django.utils.http import urlsafe_base64_encode  
 from django.utils.encoding import force_bytes 
 from  webapp.Views.utils   import   verify_email_smtp,send_html_email
+
+
+def  generate_unitid():
+    """Generate a unique alphanumeric NTN starting with 'MILL-'."""
+    suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    return  f"UNIT-{suffix}"
+
 
 def   view_mills(request):
 
@@ -101,6 +110,9 @@ def   register_mill_by_owner(request):
                 mill = Mills.objects.create(name=name,owner_id  =   request.user.id)      
                 mill.save()
 
+
+            
+
             mill_unit  =  Mills_Units.objects.create(
                 mill_id = mill.pk,
                 address=address,ntn=ntn,gst=gst,spindles_installed=spindles_installed,
@@ -109,6 +121,11 @@ def   register_mill_by_owner(request):
                 senior_p_contact = senior_p_contact,senior_p_email=senior_p_email,
                 lat =  lat, lon = lon 
             )
+
+            
+            unit_id  =  generate_unitid()  + '__' +  str(mill_unit.pk)
+
+            mill_unit.unit_id   =   unit_id
 
             mill_unit.save()
 
@@ -200,6 +217,27 @@ def   register_mill_by_fbr_official(request):
             if   User.objects.filter(username=username).exists():
                 messages.warning(request,  "This  username  is  already  taken !")
                 return redirect(request.META.get('HTTP_REFERER'))
+            
+
+            # if   User.objects.filter(Q(username=username) | Q(email=email)).exists():
+            #     messages.warning(request,  "This  username  or  email  is  already  taken !")
+            #     return redirect(request.META.get('HTTP_REFERER'))
+
+
+            # existing_user = User.objects.filter(Q(username=username) | Q(email=email))
+
+            # if existing_user.exists():
+            #     username_exists = existing_user.filter(username=username).exists()
+            #     email_exists = existing_user.filter(email=email).exists()
+
+            #     if username_exists and email_exists:
+            #         messages.warning(request, "This username and email are already taken!")
+            #     elif username_exists:
+            #         messages.warning(request, "This username is already taken!")
+            #     elif email_exists:
+            #         messages.warning(request, "This email is already used!")
+
+            #     return redirect(request.META.get('HTTP_REFERER'))
 
             user = User.objects.create_user(username=username, email=email)
             user.set_unusable_password() 
@@ -252,6 +290,11 @@ def   register_mill_by_fbr_official(request):
                 lat =  lat, lon = lon
                 
             )
+
+
+            unit_id  =  generate_unitid()  + '__' +  str(mill_unit.pk)
+
+            mill_unit.unit_id   =   unit_id
 
             mill_unit.save()
 
@@ -481,6 +524,10 @@ def   Add_unit_to_mill(request,mill_id):
                 lat =  lat, lon = lon 
                 
             )
+
+            unit_id  =  generate_unitid()  + '__' +  str(mill_unit.pk)
+
+            mill_unit.unit_id   =   unit_id
 
             mill_unit.save()
 
