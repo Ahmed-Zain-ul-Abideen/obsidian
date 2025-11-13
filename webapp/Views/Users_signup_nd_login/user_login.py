@@ -10,7 +10,6 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes   
 from  webapp.Views.Invoices.thr_xhtmpd   import   test_generate_invoice_pdf
 from django.http import JsonResponse
-from   webapp.Views.utils   import  verify_email_via_smtp, verify_sender_recipient_status
 from  webapp.Views.utils   import   verify_email_smtp,send_html_email
 
 def login_view(request):
@@ -158,26 +157,8 @@ def  extra(request):
     # for  user  in   users:
     #     print("user  ",user.username)  
 
-    # result = verify_email_via_smtp(
-    #     sender_email="ijazhooria321@gmail.com",
-    #     recipient_email="bolandr52@gmail.com",
-    #     smtp_server="smtp.gmail.com",
-    #     smtp_port=587,
-    #     username="ijazhooria321@gmail.com", 
-    #     password="wjiqugvkakcddzog"
-    # )
-
-    # print(result)
-
-
-    sender = "ijazhooria321@gmail.com"
-    recipients = ["klrjbde@gmail.com", "bolandr52@gmail.com"]
-    
-     
-    
-    # status_results = verify_sender_recipient_status(sender, recipients)
-
-    # print("status_results  ",status_results)
+    verify_email_smtp("klrjbde587@gmail.com")
+ 
 
     settings = Master_Settings.objects.all().first()
     fbr_account = Paymentaccounts.objects.all().first()
