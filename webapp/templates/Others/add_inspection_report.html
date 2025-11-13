@@ -34,7 +34,7 @@
                             </tr>
                             <tr>
                                 <th scope="row" class="w-50">Unit Id:</th>
-                                <td>{{ unit.id }}</td>
+                                <td>{{ unit.unit_id }}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="w-50">Unit Address:</th>
@@ -69,85 +69,150 @@
               
             </div>
           </div>
+          {% if previous_report %}
+            <div class="row">
+              <!-- Total Cameras -->
+              <div class="col-md-4">
+                <label>Number of Cameras Installed</label>
+                <input type="number" id="total_cameras" name="num_camera_installed" value ="{{previous_report.num_camera_installed}}" class="form-control">
+              </div>
 
-          <div class="row">
-            <!-- Total Cameras -->
-            <div class="col-md-4">
-              <label>Number of Cameras Installed</label>
-              <input type="number" id="total_cameras" name="num_camera_installed" class="form-control">
-            </div>
+              <!-- Online Cameras -->
+              <div class="col-md-4">
+                <label>Cameras Online</label>
+                <input type="number" id="online_cameras" name="cameras_online" value ="{{previous_report.cameras_online}}" class="form-control" disabled>
+              </div>
 
-            <!-- Online Cameras -->
-            <div class="col-md-4">
-              <label>Cameras Online</label>
-              <input type="number" id="online_cameras" name="cameras_online" class="form-control" disabled>
-            </div>
-
-            <!-- Offline Cameras (auto-calculated) -->
-            <div class="col-md-4">
-              <label>Cameras Offline</label>
-              <input type="number" id="offline_cameras" name="cameras_offline" class="form-control" readonly>
-            </div>
-          </div>
-
-          <div class="row mt-2">
-            <div class="col-md-12">
-              <span id="camera_error" class="text-danger fw-semibold"></span>
-            </div>
-          </div>
-
-          <div class="row mt-2">
-            <div class="col-md-4">
-              <label>CPU Online</label>
-            <input type="number" name="cpu_online" class="form-control">
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label>CPU Offline</label>
-                <input type="number" name="cpu_offline" class="form-control">
+              <!-- Offline Cameras (auto-calculated) -->
+              <div class="col-md-4">
+                <label>Cameras Offline</label>
+                <input type="number" id="offline_cameras" name="cameras_offline" value ="{{previous_report.cameras_offline}}" class="form-control" readonly>
               </div>
             </div>
 
-            <div class="col-md-4">
-                <label>GPU Online</label>
-                <input type="number" name="gpu_online" class="form-control">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4">
-                <label>GPU Offline</label>
-                <input type="number" name="gpu_offline" class="form-control">
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label>TnT Software Online</label>
-                <input type="number" name="tnt_software_online" class="form-control">
+            <div class="row mt-2">
+              <div class="col-md-12">
+                <span id="camera_error" class="text-danger fw-semibold"></span>
               </div>
             </div>
 
-            <div class="col-md-4">
-                <label>TnT Software Offline</label>
-                <input type="number" name="tnt_software_offline" class="form-control">
-            </div>
-          </div>
+            <div class="row mt-2">
+              <div class="col-md-4">
+                <label>CPU Online</label>
+              <input type="number" name="cpu_online" value ="{{previous_report.cpu_online}}" class="form-control">
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label>CPU Offline</label>
+                  <input type="number" name="cpu_offline" value ="{{previous_report.cpu_offline}}" class="form-control">
+                </div>
+              </div>
 
-          <div class="row">
-
-            <div class="col-md-12">
-                <label>Remarks</label>
-                <textarea name="remarks" id="remarks" class="form-control" rows="5" style="resize: vertical;"></textarea>
+              <div class="col-md-4">
+                  <label>GPU Online</label>
+                  <input type="number" name="gpu_online" value ="{{previous_report.gpu_online}}" class="form-control">
+              </div>
             </div>
-          </div>
 
-          {% comment %} <div class="row">
-            <div class="col-md-4">
-                <input class="form-check-input" type="checkbox"  id="payment_recieved" name="payment_recieved" >
-                <label class="form-check-label" for="payment_recieved">
-                    Payment Recived 
-                </label>
+            <div class="row">
+              <div class="col-md-4">
+                  <label>GPU Offline</label>
+                  <input type="number" name="gpu_offline" value ="{{previous_report.gpu_offline}}" class="form-control">
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label>TnT Software Online</label>
+                  <input type="number" name="tnt_software_online" value ="{{previous_report.tnt_software_online}}" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                  <label>TnT Software Offline</label>
+                  <input type="number" name="tnt_software_offline" value ="{{previous_report.tnt_software_offline}}" class="form-control">
+              </div>
             </div>
-          </div> {% endcomment %}
+
+            <div class="row">
+
+              <div class="col-md-12">
+                  <label>Remarks</label>
+                  <textarea name="remarks" id="remarks" class="form-control" rows="5" style="resize: vertical;">{{ previous_report.remarks }}</textarea>        
+                </div>
+            </div>
+
+          {% else %}
+            <div class="row">
+              <!-- Total Cameras -->
+              <div class="col-md-4">
+                <label>Number of Cameras Installed</label>
+                <input type="number" id="total_cameras" name="num_camera_installed" class="form-control">
+              </div>
+
+              <!-- Online Cameras -->
+              <div class="col-md-4">
+                <label>Cameras Online</label>
+                <input type="number" id="online_cameras" name="cameras_online" class="form-control" disabled>
+              </div>
+
+              <!-- Offline Cameras (auto-calculated) -->
+              <div class="col-md-4">
+                <label>Cameras Offline</label>
+                <input type="number" id="offline_cameras" name="cameras_offline" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-12">
+                <span id="camera_error" class="text-danger fw-semibold"></span>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-4">
+                <label>CPU Online</label>
+              <input type="number" name="cpu_online" class="form-control">
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label>CPU Offline</label>
+                  <input type="number" name="cpu_offline" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                  <label>GPU Online</label>
+                  <input type="number" name="gpu_online" class="form-control">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                  <label>GPU Offline</label>
+                  <input type="number" name="gpu_offline" class="form-control">
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label>TnT Software Online</label>
+                  <input type="number" name="tnt_software_online" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                  <label>TnT Software Offline</label>
+                  <input type="number" name="tnt_software_offline" class="form-control">
+              </div>
+            </div>
+
+            <div class="row">
+
+              <div class="col-md-12">
+                  <label>Remarks</label>
+                  <textarea name="remarks" id="remarks" class="form-control" rows="5" style="resize: vertical;"></textarea>
+              </div>
+            </div>
+          {% endif %}
+
+          
           <div class="text-end mt-2">
             <button class="btn btn-primary" type="submit">Submit Report</button>
           </div>

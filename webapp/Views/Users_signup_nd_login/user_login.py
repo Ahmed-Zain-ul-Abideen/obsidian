@@ -232,10 +232,15 @@ def dashboard(request):
     offline_cameras = []
     total_cameras = []
 
+    completed_mills = 0
+    pending_mills = 0
+
 
     for mill in mills:
         units = Mills_Units.objects.filter(mill=mill)
         online_sum = offline_sum = total_sum = 0
+        total_online = 0
+        total_installed = 0 
 
         for unit in units:
             latest_report = (
@@ -248,6 +253,15 @@ def dashboard(request):
                 online_sum += latest_report.cameras_online or 0
                 offline_sum += latest_report.cameras_offline or 0
                 total_sum += latest_report.num_camera_installed or 0
+
+                total_online += latest_report.cameras_online or 0
+                total_installed += latest_report.num_camera_installed or 0
+
+        # If all cameras online == total installed → completed
+        if total_installed > 0 and total_online == total_installed:
+            completed_mills += 1
+        else:
+            pending_mills += 1
 
         mill_names_cameras.append(mill.name)
         online_cameras.append(online_sum)
@@ -271,6 +285,9 @@ def dashboard(request):
         'online_cameras': json.dumps(online_cameras),
         'offline_cameras': json.dumps(offline_cameras),
         'total_cameras': json.dumps(total_cameras),
+
+        'completed_mills': completed_mills,
+        'pending_mills': pending_mills,
 
 
     }
